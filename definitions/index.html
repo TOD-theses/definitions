@@ -4,23 +4,23 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="None">
         
         
-        <link rel="shortcut icon" href="img/favicon.ico">
-        <title>TOD Definitions</title>
-        <link href="css/bootstrap.min.css" rel="stylesheet">
-        <link href="css/font-awesome.min.css" rel="stylesheet">
-        <link href="css/base.css" rel="stylesheet">
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>TOD definitions - TOD Definitions</title>
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
         <script>hljs.highlightAll();</script> 
     </head>
 
-    <body class="homepage">
+    <body>
         <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
             <div class="container">
-                <a class="navbar-brand" href=".">TOD Definitions</a>
+                <a class="navbar-brand" href="..">TOD Definitions</a>
                 <!-- Expander button -->
                 <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse">
                     <span class="navbar-toggler-icon"></span>
@@ -30,11 +30,11 @@
                 <div id="navbar-collapse" class="navbar-collapse collapse">
                         <!-- Main navigation -->
                         <ul class="nav navbar-nav">
-                            <li class="navitem active">
-                                <a href="." class="nav-link">TOD Definitions</a>
-                            </li>
                             <li class="navitem">
-                                <a href="definitions/" class="nav-link">TOD definitions</a>
+                                <a href=".." class="nav-link">TOD Definitions</a>
+                            </li>
+                            <li class="navitem active">
+                                <a href="./" class="nav-link">TOD definitions</a>
                             </li>
                         </ul>
 
@@ -45,12 +45,12 @@
                             </a>
                         </li>
                             <li class="nav-item">
-                                <a rel="prev" class="nav-link disabled">
+                                <a rel="prev" href=".." class="nav-link">
                                     <i class="fa fa-arrow-left"></i> Previous
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a rel="next" href="definitions/" class="nav-link">
+                                <a rel="next" class="nav-link disabled">
                                     Next <i class="fa fa-arrow-right"></i>
                                 </a>
                             </li>
@@ -72,13 +72,9 @@
     <div id="toc-collapse" class="navbar-collapse collapse card bg-secondary">
         <ul class="nav flex-column">
             
-            <li class="nav-item" data-level="1"><a href="#tod-definitions" class="nav-link">TOD Definitions</a>
+            <li class="nav-item" data-level="1"><a href="#tod-definitions" class="nav-link">TOD definitions</a>
               <ul class="nav flex-column">
-            <li class="nav-item" data-level="2"><a href="#commands" class="nav-link">Commands</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-level="2"><a href="#project-layout" class="nav-link">Project layout</a>
+            <li class="nav-item" data-level="2"><a href="#world-state" class="nav-link">World State</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -89,20 +85,69 @@
 </div></div>
                     <div class="col-md-9" role="main">
 
-<h1 id="tod-definitions">TOD Definitions</h1>
-<h2 id="commands">Commands</h2>
+<h1 id="tod-definitions">TOD definitions</h1>
+<p>Here we will show several definitions of TOD. Sub-headers are used to indicate, that the definition is a specialization of the upper definition.</p>
+<p>!!! note</p>
+<pre><code>We could differ between definitions that are focused on the outcome (taking the execution as a black-box) and definitions that are focused on the execution (ignoring the resulting state). eg "differences in the resulting balances" vs "differences in the execution's ether flows".
+</code></pre>
+<div class="toc">
 <ul>
-<li><code>mkdocs new [dir-name]</code> - Create a new project.</li>
-<li><code>mkdocs serve</code> - Start the live-reloading docs server.</li>
-<li><code>mkdocs build</code> - Build the documentation site.</li>
-<li><code>mkdocs -h</code> - Print help message and exit.</li>
+<li><a href="#tod-definitions">TOD definitions</a><ul>
+<li><a href="#world-state">World State</a><ul>
+<li><a href="#write-write-conflict">Write-Write conflict</a></li>
+<li><a href="#write-read">Write-Read</a><ul>
+<li><a href="#call-changes">Call changes</a><ul>
+<li><a href="#ether-flow-changes">Ether flow changes</a></li>
 </ul>
-<h2 id="project-layout">Project layout</h2>
-<pre><code>mkdocs.yml    # The configuration file.
-docs/
-    index.md  # The documentation homepage.
-    ...       # Other markdown pages, images and other files.
-</code></pre></div>
+</li>
+<li><a href="#log-changes">Log changes</a><ul>
+<li><a href="#token-flow-changes">Token flow changes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<h2 id="world-state">World State</h2>
+<p>A TOD occurs, when executing transactions in a different order yields different world states.</p>
+<p>The world state is a mapping from addresses to account states, and the account state includes:</p>
+<ul>
+<li>nonce</li>
+<li>balance</li>
+<li>storageRoot</li>
+<li>codeHash</li>
+</ul>
+<p>Thus, two transactions are TOD, iff the balance, the storage or the code of an account, or the nonce of a smart contract is dependent on the transaction order (the nonce of an EOA cannot be influenced by the transactions).</p>
+<h3 id="write-write-conflict">Write-Write conflict</h3>
+<p>A TOD occurs, when both transactions overwrite different values to the same storage location.</p>
+<p>An example of this is ERC-20 approve, where both transactions write to <code>approved[victim][attacker]</code>. The remaining amount of approved tokens is the write-value of the second transaction.</p>
+<p>!!! note</p>
+<pre><code>Only for storage there is a relevant overwrite functionality. For balances, there is only a set-to-0 functionality with `selfdestruct`. For `CREATE2` it is theoretically possible if there is also a Write-Read conflict (so the initialisation_code can fetch different data, depending on which transaction got executed first). For `CREATE`, the two creations will use different nonces and thus have different destinations.
+</code></pre>
+<h3 id="write-read">Write-Read</h3>
+<p>A TOD occurs, when the first transactions modifies a value and the second transaction reads this value. The value could be stored in the storage or be an accounts balance. to the storage and the second transaction reads this value from the storage.</p>
+<p>!!! warning</p>
+<pre><code>This definition also includes the case, where `selfdestruct(recipient)` writes and reads the balance. This would need special care in the implementation.
+</code></pre>
+<p>!!! note</p>
+<pre><code>This definition does not necessarily imply a world state change. For instance, assume a `counter` currently has a value `0`. The first transaction increments it to `1`. The second transaction makes an `if (counter &gt; 2)`. There is a write-read conflict, however this does not affect the world state (neither in storage, logs, code, gas, etc.).
+</code></pre>
+<h4 id="call-changes">Call changes</h4>
+<p>A TOD occurs, if the existence of a call instruction, or its stack and memory inputs, depend on the transaction order.</p>
+<p>Type of calls: CALL, STATICCALL, </p>
+<p>!!! note</p>
+<pre><code>Should we include selfdestruct here?
+</code></pre>
+<h5 id="ether-flow-changes">Ether flow changes</h5>
+<p>A TOD occurs, if the sending of ether (source, recipient or amount) depends on the transaction order.</p>
+<h4 id="log-changes">Log changes</h4>
+<p>A TOD occurs, if the existence of a log instruction, or its stack and memory inputs, depend on the transaction order.</p>
+<h5 id="token-flow-changes">Token flow changes</h5>
+<p>A TOD occurs, if the sending of tokens (source, recipient or amount) depends on the transaction order.</p></div>
             </div>
         </div>
 
@@ -110,14 +155,14 @@ docs/
             <hr>
             <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
         </footer>
-        <script src="js/jquery-3.6.0.min.js"></script>
-        <script src="js/bootstrap.min.js"></script>
+        <script src="../js/jquery-3.6.0.min.js"></script>
+        <script src="../js/bootstrap.min.js"></script>
         <script>
-            var base_url = ".",
+            var base_url = "..",
                 shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
         </script>
-        <script src="js/base.js"></script>
-        <script src="search/main.js"></script>
+        <script src="../js/base.js"></script>
+        <script src="../search/main.js"></script>
 
         <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -182,8 +227,3 @@ docs/
 
     </body>
 </html>
-
-<!--
-MkDocs version : 1.5.3
-Build Date UTC : 2024-04-15 16:18:08.431263+00:00
--->
