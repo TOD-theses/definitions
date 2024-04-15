@@ -87,9 +87,10 @@
 
 <h1 id="tod-definitions">TOD definitions</h1>
 <p>Here we will show several definitions of TOD. Sub-headers are used to indicate, that the definition is a specialization of the upper definition.</p>
-<p>!!! note</p>
-<pre><code>We could differ between definitions that are focused on the outcome (taking the execution as a black-box) and definitions that are focused on the execution (ignoring the resulting state). eg "differences in the resulting balances" vs "differences in the execution's ether flows".
-</code></pre>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>We could differ between definitions that are focused on the outcome (taking the execution as a black-box) and definitions that are focused on the execution (ignoring the resulting state). eg "differences in the resulting balances" vs "differences in the execution's ether flows".</p>
+</div>
 <div class="toc">
 <ul>
 <li><a href="#tod-definitions">TOD definitions</a><ul>
@@ -125,23 +126,27 @@
 <h3 id="write-write-conflict">Write-Write conflict</h3>
 <p>A TOD occurs, when both transactions overwrite different values to the same storage location.</p>
 <p>An example of this is ERC-20 approve, where both transactions write to <code>approved[victim][attacker]</code>. The remaining amount of approved tokens is the write-value of the second transaction.</p>
-<p>!!! note</p>
-<pre><code>Only for storage there is a relevant overwrite functionality. For balances, there is only a set-to-0 functionality with `selfdestruct`. For `CREATE2` it is theoretically possible if there is also a Write-Read conflict (so the initialisation_code can fetch different data, depending on which transaction got executed first). For `CREATE`, the two creations will use different nonces and thus have different destinations.
-</code></pre>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Only for storage there is a relevant overwrite functionality. For balances, there is only a set-to-0 functionality with <code>selfdestruct</code>. For <code>CREATE2</code> it is theoretically possible if there is also a Write-Read conflict (so the initialisation_code can fetch different data, depending on which transaction got executed first). For <code>CREATE</code>, the two creations will use different nonces and thus have different destinations.</p>
+</div>
 <h3 id="write-read">Write-Read</h3>
 <p>A TOD occurs, when the first transactions modifies a value and the second transaction reads this value. The value could be stored in the storage or be an accounts balance. to the storage and the second transaction reads this value from the storage.</p>
-<p>!!! warning</p>
-<pre><code>This definition also includes the case, where `selfdestruct(recipient)` writes and reads the balance. This would need special care in the implementation.
-</code></pre>
-<p>!!! note</p>
-<pre><code>This definition does not necessarily imply a world state change. For instance, assume a `counter` currently has a value `0`. The first transaction increments it to `1`. The second transaction makes an `if (counter &gt; 2)`. There is a write-read conflict, however this does not affect the world state (neither in storage, logs, code, gas, etc.).
-</code></pre>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This definition also includes the case, where <code>selfdestruct(recipient)</code> writes and reads the balance. This would need special care in the implementation.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This definition does not necessarily imply a world state change. For instance, assume a <code>counter</code> currently has a value <code>0</code>. The first transaction increments it to <code>1</code>. The second transaction makes an <code>if (counter &gt; 2)</code>. There is a write-read conflict, however this does not affect the world state (neither in storage, logs, code, gas, etc.).</p>
+</div>
 <h4 id="call-changes">Call changes</h4>
 <p>A TOD occurs, if the existence of a call instruction, or its stack and memory inputs, depend on the transaction order.</p>
 <p>Type of calls: CALL, STATICCALL, </p>
-<p>!!! note</p>
-<pre><code>Should we include selfdestruct here?
-</code></pre>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Should we include selfdestruct here?</p>
+</div>
 <h5 id="ether-flow-changes">Ether flow changes</h5>
 <p>A TOD occurs, if the sending of ether (source, recipient or amount) depends on the transaction order.</p>
 <h4 id="log-changes">Log changes</h4>
