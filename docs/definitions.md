@@ -64,3 +64,9 @@ A TOD occurs, if the existence of a log instruction, or its stack and memory inp
 ##### Token flow changes
 
 A TOD occurs, if the sending of tokens (source, recipient or amount) depends on the transaction order.
+
+
+
+$$
+\Alpha \& \Omega
+$$
